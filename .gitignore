@@ -1,0 +1,23 @@
+*.pcap
+
+*.pdf
+
+packets/
+
+code/
+
+*.mp4
+
+*.pptx
+
+*.7z
+
+*.zip
+
+Paper Candidates.txt
+
+rc4_calculations.txt
+
+voice recordings/
+
+steps.txt
