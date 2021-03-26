@@ -56,8 +56,9 @@ def arp_monitor_callback(pkt):
                     re_injection_packet = pkt
                 # FIXME Have this on a new thread?
                 # FIXME Spawn the new thread once this is not None
-                re_injection_packet.addr2 = source_mac
-                # sendp(re_injection_packet, iface=iface, count=20, inter=0.100)
+                if re_injection_packet is not None:
+                    re_injection_packet.addr2 = source_mac
+                    # sendp(re_injection_packet, iface=iface, count=20, inter=0.100)
                 xor = data_dec ^ int(ARP_REQUEST_PATTERN, 16)
                 keystream_first_bytes = hex(xor)[2:]
                 if iv_hexstring not in keystreams:
@@ -84,6 +85,7 @@ if __name__ == "__main__":
         print("[-] Please specify all program arguments... run `python3 sniffer.py -h` for help")
         exit(1)
     iface = args.interface
+    source_mac = args.source_mac
 
     # sniff(iface="wlp7s0", prn=arp_monitor_callback, filter="arp", store=0)
     sniff(iface=iface, prn=arp_monitor_callback, store=0, stop_filter=stop_condition)
