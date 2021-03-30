@@ -21,3 +21,7 @@ rc4_calculations.txt
 voice recordings/
 
 steps.txt
+
+*.docx
+
+*.xlsx
