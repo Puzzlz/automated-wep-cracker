@@ -75,6 +75,7 @@ if __name__ == "__main__":
     # aireplay-ng --arpreplay -b C4:12:F5:7C:7C:0C -h d0:df:9a:8e:42:e9 wlp7s0
 
     # TODO Start this on another thread
+    # while arp_packets_captured < 1
     # deauth(args.interface, int(args.count), args.bssid, args.target_mac)
     
     # scapy_cap = rdpcap('packets/arp_packet_dump.pcap')
