@@ -91,7 +91,7 @@ if __name__ == "__main__":
     sniff(iface=iface, prn=arp_monitor_callback, store=0, stop_filter=stop_condition)
 
     cmd_fake_auth = 'aireplay-ng'
-    cmd_arpreplay = 'aireplay-mg'
+    cmd_arpreplay = 'aireplay-ng'
     cmd_airodump = 'airodump-ng'
     cmd_aircrack = 'aircrack-ng'
 
