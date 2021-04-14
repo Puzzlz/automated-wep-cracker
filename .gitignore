@@ -29,3 +29,8 @@ steps.txt
 *.docx
 
 *.xlsx
+
+aircrack_process.py
+aireplay_tester.py
+airodump_parser.py
+airodump_process.py
