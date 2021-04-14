@@ -67,14 +67,14 @@ def stop_condition(pkt):
 
 if __name__ == "__main__":
     parser = AP(description="Capture ARP packets, exctract the RC4 keystreams, and crack the WEP key.")
-    parser.add_argument("-i", "--interface",help="interface to sniff and send packets from", required=True)
-    parser.add_argument("-a", "--access_point",help="MAC address of the access point, also known as the BSSID of the network.", required=True)
-    parser.add_argument("-s", "--source",help="MAC address of the device injecting the packets. run ifconfig to find it", required=True)
-    parser.add_argument("-c", "--channel",help="Channel that target network is operation on.", required=True)
-    parser.add_argument("-p", "--packets",help="packets per second to inject", default=500)
-    parser.add_argument("-t", "--target",help="MAC address of the target device for the de-auth attack, default is broadcast", default='ff:ff:ff:ff:ff:ff')
-    parser.add_argument("-n", "--number_deauth",help="Number of de-auth packets to send", default=25)
-    parser.add_argument("-r", "--captured_arp_packets",help="Number of IVs to capture before attempting to crack password.")
+    parser.add_argument("-i", "--interface", help="interface to sniff and send packets from", required=True)
+    parser.add_argument("-a", "--access_point", help="MAC address of the access point, also known as the BSSID of the network.", required=True)
+    parser.add_argument("-s", "--source", help="MAC address of the device injecting the packets. run ifconfig to find it", required=True)
+    parser.add_argument("-c", "--channel", help="Channel that target network is operation on.", required=True)
+    parser.add_argument("-p", "--packets", help="packets per second to inject", default=500)
+    parser.add_argument("-t", "--target", help="MAC address of the target device for the de-auth attack, default is broadcast", default='ff:ff:ff:ff:ff:ff')
+    parser.add_argument("-n", "--number_deauth", help="Number of de-auth packets to send per batch", default=25)
+    parser.add_argument("-r", "--captured_arp_packets", help="Number of IVs to capture before attempting to crack password.")
     args = parser.parse_args()
 
     iface = args.interface
