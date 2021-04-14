@@ -61,7 +61,23 @@ iface = 'wlan0'
 
 
 
+### Threadding
+
+Run line 101 happens first, wait until completed
+
+Start line 115 constantly running until IV count reaches threshold, 20k?
+
+Start running line 114
+
+Line 103 constantly running 
+
+Line 106 loop should run until we successfully deauthenticate once
+
+
+
 ## Report Structure
+
+link to the doc ryan made instead
 
 ```
 - Title page
