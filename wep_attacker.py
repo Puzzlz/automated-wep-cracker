@@ -1,7 +1,6 @@
 from scapy.all import *
 from argparse import ArgumentParser as AP
 import subprocess
-import multiprocessing as pm
 import shlex
 import time
 import csv
