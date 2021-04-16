@@ -1,6 +1,7 @@
 from scapy.all import *
 from argparse import ArgumentParser as AP
 import subprocess
+import multiprocessing as mp
 import shlex
 import time
 import csv
@@ -108,7 +109,6 @@ if __name__ == "__main__":
 
     # Join, so the function is now blocking; Make parent wait for completion
     process_get_enough_ivs.join()
-
 
     # Once T3 exits, flag must be set, so we kill T1 and T2
     process_getARP.join()
