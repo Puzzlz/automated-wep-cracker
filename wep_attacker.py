@@ -110,20 +110,13 @@ if __name__ == "__main__":
     # Join, so the function is now blocking; Make parent wait for completion
     process_get_enough_ivs.join()
 
-    # While event flag is not set, keep checking status (waiting for T3)
-    while not enough_ivs.is_set():
 
-        # If flag is set, kill processes, otherwise wait/continue
-        if enough_ivs.is_set():
-            process_getARP.join()
-            process_getARP.close()
-            process_runairodump.join()
-            process_runairodump.close()
-            process_get_enough_ivs.close()
-
-        # What if the flag gets set during the time.sleep() ???
-        # else: time.sleep(3)
-        else: print('Not enough IVs so far...')
+    # Once T3 exits, flag must be set, so we kill T1 and T2
+    process_getARP.join()
+    process_getARP.close()
+    process_runairodump.join()
+    process_runairodump.close()
+    process_get_enough_ivs.close()
 
     # Run AirCrack-ng using captured data; Continuing attack on parent process
     aircrack = subprocess.Popen([cmd_aircrack], stdout=subprocess.PIPE)
