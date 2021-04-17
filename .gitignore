@@ -35,4 +35,4 @@ aireplay_tester.py
 airodump_parser.py
 airodump_process.py
 
-./idea
+.idea/
