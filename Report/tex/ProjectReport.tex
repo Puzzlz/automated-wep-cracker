@@ -19,7 +19,7 @@
 	%frame=lines,
 	%framesep=2mm,
 	baselinestretch=1.2,
-	%fontsize=\small,
+	fontsize=\small,
 	linenos=true,
 	xleftmargin=20pt,
 	bgcolor=code-bg,
@@ -33,6 +33,16 @@
 
 \usemintedstyle{emacs}
 \usepackage{listings}
+
+% Make links
+\usepackage{hyperref}
+\hypersetup{
+    colorlinks,
+    citecolor=black,
+    filecolor=black,
+    linkcolor=black,
+    urlcolor=black
+}
 
 % Packages to set graphics and float spacing
 \usepackage{graphicx}
@@ -107,10 +117,10 @@ Given that WEP was a widely used protocol in wireless networks, it is interestin
 
 \section{Background}
 \subsection{RC4}
-RC4 was one of the most commonly used stream ciphers. Originally a proprietary algorithm, the inner workings were not made public, making security research and verification very difficult. For a long time many use cases assumed blind trust in RC4. It was reverse engineered in 1994, which led to the discovery of its weakness. Before this discovery, RC4 was used for an approximated 50\% of TLS traffic, as well as for WEP, WPA, PDF, BitTorrent, and MS Point-To-Point Encryption. RC4 is fast, easy to implement, and allows variable key lengths. This allows it to easily be used on machines with relatively low computational resources, extending usability across the maximum number of systems. However, these same reasons as well as the fact that RC4 does not implement a nonce eventually lead to the discovery of fundamental flaws in RC4 that can be exploited, consequently resulting in RC4 no longer being considered secure. Unlike RC4, modern stream ciphers use a nonce in order to gain randomness in case the key is reused, increasing the security of the cipher.  RC4 consists of a key scheduling algorithm (KSA) and a keystream generator (PRGA). \\
+RC4 was one of the most commonly used stream ciphers. Originally a proprietary algorithm, the inner workings were not made public, making security research and verification very difficult. For a long time many use cases assumed blind trust in RC4. It was reverse engineered in 1994, which led to the discovery of its weakness. Before this discovery, RC4 was used for an approximated 50\% of TLS traffic, as well as for WEP, WPA, PDF, BitTorrent, and MS Point-To-Point Encryption. RC4 is fast, easy to implement, and allows variable key lengths \cite{appliedCrypto}. This allows it to easily be used on machines with relatively low computational resources, extending usability across the maximum number of systems. However, these same reasons as well as the fact that RC4 does not implement a nonce eventually lead to the discovery of fundamental flaws in RC4 that can be exploited, consequently resulting in RC4 no longer being considered secure. Unlike RC4, modern stream ciphers use a nonce in order to gain randomness in case the key is reused, increasing the security of the cipher.
 
 \subsection{Advanced Encryption Standard (AES)}
-AES Replaced DES as the standard for block ciphers in 2001. DES used a 56 bit key to encrypt blocks of 64 bits by taking the plaintext and passing it through an initial permutation then running a 16 round Feistel cipher; each generating a new 48 bit key to be used. Contrary to RC4, DES has become outdated due to the small block and key sizes rather than design flaws. By using a small 56 bit key, DES could be brute forced in $2^56$ steps. Brute force attacks are computationally intensive, so alone this would not be cause for major concern; however, by 2000, attacks monitoring differential power usage analysis could identify the key after 100 encryptions, and today there exists specialized hardware designed to recover the key in less than 24 hours. \\
+AES Replaced DES as the standard for block ciphers in 2001. DES used a 56 bit key to encrypt blocks of 64 bits by taking the plaintext and passing it through an initial permutation then running a 16 round Feistel cipher; each generating a new 48 bit key to be used. Contrary to RC4, DES has become outdated due to the small block and key sizes rather than design flaws. By using a small 56 bit key, DES could be brute forced in $2^{56}$ steps. Brute force attacks are computationally intensive, so alone this would not be cause for major concern; however, by 2000, attacks monitoring differential power usage analysis could identify the key after 100 encryptions, and today there exists specialized hardware designed to recover the key in less than 24 hours. \\
 
 AES was a major advancement over DES as it was modern, and did not contain known vulnerabilities that could be abused by private agencies such as the NSA. AES is built up from many rounds of substitution-permutation network instead of Feistel ciphers. "AES is as secure as a block cipher can be..." \cite{appliedCrypto}. We can't say it will never be broken; however, to this day no vulnerabilities or weaknesses have been found. AES uses a block length of 128 bits along with either a 128 bit key and 10 rounds, 192 bit key with 12 rounds, or a 256 bit key with 14 rounds to obfuscate the plaintext message into ciphertext that cannot easily be reversed. \\
 
@@ -121,7 +131,7 @@ AES was a major advancement over DES as it was modern, and did not contain known
 %    \caption{AES Workflow}
 %\end{figure}
 
-While the AES that is used in practice has not been broken, it is common to attack weaker versions of encryption schemes in order to get insight as to how stronger versions can potentially be compromised. Known AES attacks on reduced versions have broken a 128 bit key with 7 rounds out of 10, 192 bit key over 8 rounds out of 12, and 256 bit key over 9 rounds out of 14. \\
+While the AES that is used in practice has not been broken, it is common to attack weaker versions of encryption schemes in order to get insight as to how stronger versions can potentially be compromised \cite{appliedCrypto}. Known AES attacks on reduced versions have broken a 128 bit key with 7 rounds out of 10, 192 bit key over 8 rounds out of 12, and 256 bit key over 9 rounds out of 14 \cite{appliedCrypto}. \\
 
 Since AES has currently not been compromised, it is still safe to be used today, and can be found in recent networking standards such as WPA2/WPA2-PSK.
 
@@ -131,15 +141,18 @@ We know that an encryption scheme can only be as secure as the underlying cipher
 \subsection{WEP Problems}
 WEP relies on RC4, and as a result has many inherent problems that make the wireless protocol totally insecure. This includes easily finding collisions, using decryption dictionaries if storage is available, using message modification,  and authentication spoofing. WEP uses a 24 bit IV ($v$) and a 32 bit checksum of message m to send a ciphertext ($c$) over the network. The checksum is referred to as $c(m)$, and ciphertext $c$ is computed as $RC4(v,k) \oplus <m || c(m)>$. Resulting in a packet being sent in the format $v || c$. Messages are received and decrypted by first computing $RC4(v,k)$, accepting the message if the decrypted plaintext and checksum are valid. \\
 
-Collisions are very easy to find, since $RC4(v,k)$ relies on $v$ and $k$ where $k$ is a secret key that rarely changes, and is commonly shared between everyone connected to the network. This reduces the complexity of cracking to be finding $v$, which will have a guaranteed collision after approximately 16 million collisions ($2^34$). If $v$ is chosen randomly, we can consider the birthday problem in order to estimate the amount of attempts before a collision is expected. This results in an expected $2^12 = 4096$ transmissions before a collision. However, for wireless implementations, it is common to start with $v= 0$, and increment after each transmission, therefore we expect a higher number of collisions when $v$ is small. Since the value of $v$ is sent during the transmission, this can constantly be checked by an attacker. \\
+Collisions are very easy to find, since $RC4(v,k)$ relies on $v$ and $k$ where $k$ is a secret key that rarely changes, and is commonly shared between everyone connected to the network. This reduces the complexity of cracking to be finding $v$, which will have a guaranteed collision after approximately 16 million collisions ($2^{34}$). If $v$ is chosen randomly, we can consider the birthday problem in order to estimate the amount of attempts before a collision is expected. This results in an expected $2^{12} = 4096$ transmissions before a collision. However, for wireless implementations, it is common to start with $v= 0$, and increment after each transmission, therefore we expect a higher number of collisions when $v$ is small. Since the value of $v$ is sent during the transmission, this can constantly be checked by an attacker. \\
 
-Using a known plaintext attack by monitoring packets before they are sent, we know the corresponding RC4 output. Creating known network traffic by creating packets or constantly running network operations until a collision on v is observed. Once this occurs, an attacker can decrypt both plaintexts from overlapping keys using the known plaintext, and create a comprehensive decryption dictionary. \\
+Using a known plaintext attack by monitoring packets before they are sent, we know the corresponding RC4 output. Creating known network traffic by creating packets or constantly running network operations until a collision on v is observed. Once this occurs, an attacker can decrypt both plaintexts from overlapping keys using the known plaintext, and create a comprehensive decryption dictionary. 
 
 
 
 \section{Literature Review}
- - Talk about article?\\
- - Cite article\\
+\subsection{Attacks on the RC4 Stream Cipher \cite{klein}}
+This paper is the main paper that this project is based on. It proves a relationship between keystreams and the key in the RC4 algorithm. This relationship is the basis of the exploit that the attack in our project uses. 
+
+\subsection{Breaking 104 Bit WEP in Less Than 60 Seconds \cite{mainPaper}}
+This paper presents a full attack to retrieve the WEP key. It describes the method to capture a sufficient amount of keystreams and use them to get the key with an algorithm based on the exploit shown in Kleins paper. It uses an approximation of the formula that Klein presents to efficiently compute the key bytes in parallel as opposed to iteratively as Kleins formula does. Then it proves through simulations with the Aircrack library that the attack can be done with relatively low cost equipment very quickly. 
 
 \section{Frameworks and Technologies}
 In order to get the project to where it is, we had to use a multitude of existing libraries as well as existing tools. The entire project was written using the Python programming language, and a little bit of shell script to help automate the data collection process. In the Python code we used many libraries, the major ones being the scapy library to help construct the deauthentication packets, as well as send them. We also used the subprocess library to start, manage and stop the aircrack processes from within Python. The last major library used was the multiprocessing library. This library allowed us to run different aircrack modules simultaneously from the same Python program while individually managing them. \\
@@ -164,7 +177,7 @@ sudo airmon-ng check kill
 sudo airmon-ng start <wireless_iface>
 \end{minted}
 
-The process for applying the attack is fairly straightforward. The attacker (laptop) needs to listen to traffic on the target network and capture as many unique IVs as possible. WEP will use a random IV, 24-bits in length, every time it encrypts a new packet. In most real cases there would be a lot of traffic on the network (perhaps a hotel), but in our case there was just the one device. So we needed to speed the process up by creating our own traffic. This was accomplished by repeatedly sending the router Address Resolution Protocol (ARP) requests, with which the router would duplicate by broadcasting, and the other device (the phone) would send an ARP reply. Therefore, with one packet being injected, two unique IVs were created. ARP was also chosen because they are at the Link Layer of the Internet Protocol (IP). Packets at such a low level are generally not rate limited since it is the hardware speaking. ARP packets also have a static data structure for the first 8 bytes (seen in Figure 4), with the only difference being a 0x01 for ARP request and 0x02 for ARP reply. This allows us to get a 16-byte partial keystream by XORing the plaintext ARP pattern (and the Logical Link Control header) with the encrypted equivalent.\\
+The process for applying the attack is fairly straightforward. The attacker (laptop) needs to listen to traffic on the target network and capture as many unique IVs as possible. WEP will use a random IV, 24-bits in length, every time it encrypts a new packet. In most real cases there would be a lot of traffic on the network (perhaps a hotel), but in our case there was just the one device. So we needed to speed the process up by creating our own traffic. This was accomplished by repeatedly sending the router Address Resolution Protocol (ARP) requests, with which the router would duplicate by broadcasting, and the other device (the phone) would send an ARP reply. Therefore, with one packet being injected, two unique IVs were created. ARP was also chosen because they are at the Link Layer of the Internet Protocol (IP). Packets at such a low level are generally not rate limited since it is the hardware speaking. ARP packets also have a static data structure for the first 8 bytes (seen in Figure 2), with the only difference being a 0x01 for ARP request and 0x02 for ARP reply. This allows us to get a 16-byte partial keystream by XORing the plaintext ARP pattern (and the Logical Link Control header) with the encrypted equivalent.\\
 
 \begin{figure}[H]
  	\centering
@@ -175,13 +188,13 @@ The process for applying the attack is fairly straightforward. The attacker (lap
 Once enough partial keystreams have been captured (1 keystream = 1 IV), a key ranking algorithm can be used to find the correct key (given enough of them). 
 
 \subsection{Key Ranking Algorithm (PTW)}
-(1) then describes an algorithm for determining the correct key based on the input of the collected keystreams. Each byte in the key is approximately computed using every recovered byte from the keystream and a modified version of the formula presented in Kleins paper. Each time the key byte is approximated using a key stream, the value that is computed is voted for as the correct key byte. The votes are tracked for every key byte and the value with the highest vote at the end is assumed to be the correct key byte. Using the modified approximate calculation, the key bytes can be computed this way in parallel instead of iteratively as in Klein's solution.\\
+Tews et al. then describes an algorithm for determining the correct key based on the input of the collected keystreams \cite{mainPaper}. Each byte in the key is approximately computed using every recovered byte from the keystream and a modified version of the formula presented in Kleins paper. Each time the key byte is approximated using a key stream, the value that is computed is voted for as the correct key byte. The votes are tracked for every key byte and the value with the highest vote at the end is assumed to be the correct key byte. Using the modified approximate calculation, the key bytes can be computed this way in parallel instead of iteratively as in Klein's solution.\\
 
 If the sample size is small, the correct key byte may not be the one with the highest number of votes. Initially, the algorithm selects each key byte that has the highest number of votes and determines if that key is correct. If it is not, the algorithm selects the next closest key byte by votes out of all the key bytes and adds that single key byte into the key bytes that have been selected. Everytime the algorithm selects a new key byte this way, it checks all the new possible combinations of key bytes out of the ones that have already been selected. The algorithm repeats this process until the correct key is found. \\
 
-There are certain cases where the modified approximation used to calculate the key byte does not get the correct key byte. In this case the approximation will not render the proper key byte with greater probability than other guesses, so the voting system described above will not work since the correct key is expected to get an equal amount of votes as other guesses. The algorithm considers this case a strong key byte, the key bytes that work for the approximation are simply normal key bytes. (1) describes a way to determine if a key is strong or normal. To handle these cases, after the strong key bytes are determined, the algorithm ignores the votes and selects all guesses for that key byte so that they are all checked and continues to handle the normal key bytes as before. (1) notes that strong key bytes that cannot be probabilistically computed with the approximation are not common occurrences and demonstrates and demonstrates this through simulation.\\
+There are certain cases where the modified approximation used to calculate the key byte does not get the correct key byte. In this case the approximation will not render the proper key byte with greater probability than other guesses, so the voting system described above will not work since the correct key is expected to get an equal amount of votes as other guesses. The algorithm considers this case a strong key byte, the key bytes that work for the approximation are simply normal key bytes. Tews et al. describes a way to determine if a key is strong or normal. To handle these cases, after the strong key bytes are determined, the algorithm ignores the votes and selects all guesses for that key byte so that they are all checked and continues to handle the normal key bytes as before. Within the same paper by Tews et al. they note that strong key bytes that cannot be probabilistically computed with the approximation are not common occurrences and demonstrates and demonstrates this through simulation \cite{mainPaper}.\\
 
-\begin{minted}{text}
+\begin{minted}{python}
 votes = [i: {} for i keybytes];
 # parallel for each key byte i
 For x_i in keystream:
@@ -212,7 +225,7 @@ Then key is initialized as an array with the top voted value for each key byte, 
 Next, for all the normal bytes, the algorithm begins to loop until a correct key can be found from the combinations of key bytes in the key array. While the correct key is not found, the loop finds the next best key byte from the votes array. The best key byte is the value closest to the key byte with the most votes in the number of votes for each position i. To be specific, only a single value is added to key, not a value for each key byte. Then the loop continues to the next check and iteration.
 
 \section{Implementation}
-Our original goal was to write everything from scratch using just the scapy library as an interface to the network card. This included writing our own code to sniff packets on the network and identify ARP packets, even when encrypted. It also included building our own deauthentication packets, as well as duplicating and injecting ARP requests back into the network. Although we eventually got everything working, it was significantly slower than what aircrack-ng was accomplishing. The stark difference between the two can be seen in Table 1 versus Table 2. This could have been for multiple reasons such as possible inefficiencies in our code as well as the fact that aircrack is implemented in C, whereas we were using Python (C being a much level programming language is able to better communicate with the OS). This, along with the fact that (1) used aircrack to test their results, and the key ranking algorithm is used by aircrack, lead us to use the knowledge we gained from our manual method to implement it instead using aircrack. To accomplish this we get all of the information required (NIC interface, access point MAC, attack device MAC, etc…) using arguments given by the user, and through the use of multiprocessing, passed all of that required information to the different aircrack tools, parse it’s output, and return the relevant information to the user, making the entire process automatic and seamless.\\
+Our original goal was to write everything from scratch using just the scapy library as an interface to the network card. This included writing our own code to sniff packets on the network and identify ARP packets, even when encrypted. It also included building our own deauthentication packets, as well as duplicating and injecting ARP requests back into the network. Although we eventually got everything working, it was significantly slower than what aircrack-ng was accomplishing. The stark difference between the two can be seen in Table 1 versus Table 2. This could have been for multiple reasons such as possible inefficiencies in our code as well as the fact that aircrack is implemented in C, whereas we were using Python (C being a much level programming language is able to better communicate with the OS). This, along with the fact that \cite{mainPaper} used aircrack to test their results, and the key ranking algorithm is used by aircrack, lead us to use the knowledge we gained from our manual method to implement it instead using aircrack. To accomplish this we get all of the information required (NIC interface, access point MAC, attack device MAC, etc…) using arguments given by the user, and through the use of multiprocessing, passed all of that required information to the different aircrack tools, parse it’s output, and return the relevant information to the user, making the entire process automatic and seamless.\\
 
 \begin{table}[H]
 	\centering
@@ -243,7 +256,7 @@ Our original goal was to write everything from scratch using just the scapy libr
 
 
 \section{Results}
-In our project proposal one of the metrics we wanted to test was the success rate of cracking the password based on the number of IVs obtained. In (1) they mention that, for a 128-bit key, there is a 50\% success rate with 40000 IVs, and a 95\% success rate with 85000 IVs. They failed to mention the success rate when the key was 64-bits instead, so we included 64-bit keys in our results, both of which are presented below.\\
+In our project proposal one of the metrics we wanted to test was the success rate of cracking the password based on the number of IVs obtained. In \cite{mainPaper} they mention that, for a 128-bit key, there is a 50\% success rate with 40000 IVs, and a 95\% success rate with 85000 IVs. They failed to mention the success rate when the key was 64-bits instead, so we included 64-bit keys in our results, both of which are presented below.\\
 
 \begin{figure}[H]
     \centering
@@ -259,7 +272,7 @@ In our project proposal one of the metrics we wanted to test was the success rat
     \end{minipage}
 \end{figure}
 
-A major focus in (1) is the time it takes for this attack to work, and as mentioned in the title, they claim to be able to do it in under 1 minute. Although we were not able to obtain that kind of speed for 128-bit keys, it is possible that this 1 minute mark is obtainable with a more powerful attack machine, as well as having more devices on the victim network generating traffic (as opposed to our single device). The time taken by IV target number can be seen in the graph below.
+A major focus in \cite{mainPaper} is the time it takes for this attack to work, and as mentioned in the title, they claim to be able to do it in under 1 minute. Although we were not able to obtain that kind of speed for 128-bit keys, it is possible that this 1 minute mark is obtainable with a more powerful attack machine, as well as having more devices on the victim network generating traffic (as opposed to our single device). The time taken by IV target number can be seen in the graph below.
 
 \begin{figure}[H]
  	\centering
@@ -267,7 +280,7 @@ A major focus in (1) is the time it takes for this attack to work, and as mentio
     \caption{Time elapsed to obtain desired number of IVs}
 \end{figure}
 
-The entire process of sending the packets, sniffing the packets, handling the file IO operations, was handled by a very old laptop with 4GB of RAM, and an AMD E-350 laptop CPU with 2 core and 2 threads. This caused the CPU usage to be at 100\% at all times (Figure 8 and Figure 9), but the RAM barely being used (Figure 9). This leads us to believe that faster times could have been reached on better hardware, but we did not have the hardware available to test it on. \\
+The entire process of sending the packets, sniffing the packets, handling the file IO operations, was handled by a very old laptop with 4GB of RAM, and an AMD E-350 laptop CPU with 2 core and 2 threads. This caused the CPU usage to be at 100\% at all times (Figure 3 and Figure 4), but the RAM barely being used (Figure 4). This leads us to believe that faster times could have been reached on better hardware, but we did not have the hardware available to test it on. \\
 
 \begin{figure}[H]
  	\centering
@@ -281,7 +294,7 @@ The entire process of sending the packets, sniffing the packets, handling the fi
     \caption{Task Manager}
 \end{figure}
 
-This means that deploying this attack on a Raspberry Pi would be possible, there just might be a performance loss in terms of acquiring the desired number of IVs. When it came time to attempt to crack the password, it took, on average, 10 seconds on the laptop. This same process took, on average, 1 second on a modern desktop CPU. The raspberry pi would therefore be capable of cracking the password as well, although it is a task that could be outsourced to a desktop after the packets are captured.\\
+This means that deploying this attack on a Raspberry Pi would be possible, there just might be a performance loss in terms of acquiring the desired number of IVs. When it came time to attempt to crack the password, it took, on average, 10 seconds on the laptop. This same process took, on average, 1 second on a modern desktop CPU. The raspberry pi would therefore be capable of cracking the password as well, although it is a task that could be outsourced to a desktop after the packets are captured.
 
 
 

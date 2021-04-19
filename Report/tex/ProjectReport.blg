@@ -3,44 +3,46 @@ Capacity: max_strings=100000, hash_size=100000, hash_prime=85009
 The top-level auxiliary file: ProjectReport.aux
 The style file: unsrtnat.bst
 Database file #1: sources.bib
-You've used 2 entries,
+Warning--empty year in mainPaper
+You've used 3 entries,
             2481 wiz_defined-function locations,
-            573 strings with 4913 characters,
-and the built_in function-call counts, 783 in all, are:
-= -- 75
-> -- 28
+            583 strings with 5165 characters,
+and the built_in function-call counts, 1113 in all, are:
+= -- 101
+> -- 49
 < -- 1
-+ -- 12
-- -- 8
-* -- 58
-:= -- 136
-add.period$ -- 12
-call.type$ -- 2
-change.case$ -- 3
-chr.to.int$ -- 2
-cite$ -- 2
-duplicate$ -- 38
-empty$ -- 69
-format.name$ -- 10
-if$ -- 162
++ -- 20
+- -- 14
+* -- 82
+:= -- 189
+add.period$ -- 16
+call.type$ -- 3
+change.case$ -- 5
+chr.to.int$ -- 3
+cite$ -- 4
+duplicate$ -- 52
+empty$ -- 99
+format.name$ -- 17
+if$ -- 232
 int.to.chr$ -- 1
-int.to.str$ -- 3
+int.to.str$ -- 4
 missing$ -- 3
-newline$ -- 23
-num.names$ -- 6
-pop$ -- 11
+newline$ -- 29
+num.names$ -- 9
+pop$ -- 22
 preamble$ -- 1
-purify$ -- 2
+purify$ -- 3
 quote$ -- 0
-skip$ -- 21
+skip$ -- 33
 stack$ -- 0
-substring$ -- 29
-swap$ -- 4
+substring$ -- 31
+swap$ -- 6
 text.length$ -- 0
 text.prefix$ -- 0
 top$ -- 0
-type$ -- 11
-warning$ -- 0
-while$ -- 6
+type$ -- 18
+warning$ -- 1
+while$ -- 8
 width$ -- 0
-write$ -- 44
+write$ -- 57
+(There was 1 warning)

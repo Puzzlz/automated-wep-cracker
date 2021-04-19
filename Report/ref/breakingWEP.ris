@@ -1,0 +1,16 @@
+TY  - GEN
+DO  - 10.1007/978-3-540-77535-5_14
+PB  - Springer Berlin Heidelberg
+ID  - cdi_springer_books_10_1007_978_3_540_77535_5_14
+N2  - We demonstrate an active attack on the WEP protocol that is able to recover a 104-bit WEP key using less than 40,000 frames with a success probability of 50%. In order to succeed in 95% of all cases, 85,000 packets are needed. The IV of these packets can be randomly chosen. This is an improvement in the number of required frames by more than an order of magnitude over the best known key-recovery attacks for WEP. On a IEEE 802.11g network, the number of frames required can be obtained by re-injection in less than a minute. The required computational effort is approximately 220 RC4 key setups, which on current desktop and laptop CPUs is negligible. 
+KW  - Equivalent Privacy ; Initialization Vector ; Address Resolution Protocol ; Stream Cipher ; Cryptology ePrint Archive
+EP  - 202
+T3  - Lecture Notes in Computer Science
+AU  - Tews, Erik
+AU  - Weinmann, Ralf-Philipp
+AU  - Pyshkin, Andrei
+SN  - 0302-9743
+CY  - Berlin, Heidelberg
+SP  - 188
+T1  - Breaking 104 Bit WEP in Less Than 60 Seconds
+ER  -

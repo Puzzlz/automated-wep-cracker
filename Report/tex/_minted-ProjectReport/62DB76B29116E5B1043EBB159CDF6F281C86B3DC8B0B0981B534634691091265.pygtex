@@ -1,0 +1,23 @@
+\begin{Verbatim}[commandchars=\\\{\}]
+\PYG{n}{votes} \PYG{o}{=} \PYG{p}{[}\PYG{n}{i}\PYG{p}{:} \PYG{p}{\PYGZob{}\PYGZcb{}} \PYG{k}{for} \PYG{n}{i} \PYG{n}{keybytes}\PYG{p}{];}
+\PYG{c+c1}{\PYGZsh{} parallel for each key byte i}
+\PYG{n}{For} \PYG{n}{x\PYGZus{}i} \PYG{o+ow}{in} \PYG{n}{keystream}\PYG{p}{:}
+  \PYG{n}{K\PYGZus{}ai} \PYG{o}{=}  \PYG{n}{approx}\PYG{p}{(}\PYG{n}{x\PYGZus{}i}\PYG{p}{);}
+  \PYG{n}{votes}\PYG{p}{[}\PYG{n}{i}\PYG{p}{][}\PYG{n}{K\PYGZus{}ai}\PYG{p}{]} \PYG{o}{+=} \PYG{l+m+mi}{1}\PYG{p}{;}
+
+\PYG{c+c1}{\PYGZsh{} after votes are computed}
+\PYG{n}{key} \PYG{o}{=} \PYG{p}{[[}\PYG{n+nb}{max}\PYG{p}{(}\PYG{n}{votes}\PYG{p}{[}\PYG{n}{i}\PYG{p}{])]} \PYG{k}{for} \PYG{n+nb}{all} \PYG{n}{i}\PYG{p}{];}
+
+\PYG{n}{If} \PYG{n+nb}{any} \PYG{n}{key}\PYG{p}{[}\PYG{n}{i}\PYG{p}{]} \PYG{o+ow}{is} \PYG{n}{a} \PYG{n}{strong} \PYG{n}{byte} \PYG{n}{put} \PYG{n+nb}{all} \PYG{n}{computed} \PYG{n}{values} \PYG{o+ow}{in} \PYG{n}{votes}\PYG{p}{[}\PYG{n}{i}\PYG{p}{]} \PYG{n}{into} \PYG{n}{key}\PYG{p}{[}\PYG{n}{i}\PYG{p}{];}
+
+\PYG{n}{While} \PYG{n}{check}\PYG{p}{(}\PYG{n}{key}\PYG{p}{)} \PYG{o+ow}{is} \PYG{n}{false}\PYG{p}{:}
+  \PYG{n}{Candidate}\PYG{p}{,} \PYG{n}{i} \PYG{o}{=} \PYG{n}{Find} \PYG{n+nb}{min}\PYG{p}{(}\PYG{n}{key}\PYG{p}{[}\PYG{n}{i}\PYG{p}{][}\PYG{l+m+mi}{0}\PYG{p}{]}\PYG{o}{\PYGZhy{}}\PYG{n+nb}{max}\PYG{p}{(}\PYG{n}{votes}\PYG{p}{[}\PYG{n}{i}\PYG{p}{])} \PYG{k}{for} \PYG{n}{each} \PYG{n}{i} \PYG{n}{where} \PYG{n}{key}\PYG{p}{[}\PYG{n}{i}\PYG{p}{]} \PYG{o+ow}{is} \PYG{o+ow}{not} \PYG{n}{strong}\PYG{p}{);}
+    \PYG{n}{Key}\PYG{p}{[}\PYG{n}{i}\PYG{p}{]} \PYG{o}{=} \PYG{n}{Candidate}\PYG{p}{;}
+\PYG{n}{Return} \PYG{n}{the} \PYG{n}{correct} \PYG{n}{key}\PYG{p}{;}
+
+\PYG{n}{check}\PYG{p}{(}\PYG{n}{key}\PYG{p}{):}
+  \PYG{n}{Key} \PYG{o+ow}{is} \PYG{n}{a} \PYG{l+m+mi}{2}\PYG{n}{d} \PYG{n}{array} \PYG{n}{of} \PYG{n}{possible} \PYG{n}{key} \PYG{n+nb}{bytes}\PYG{p}{;}
+  \PYG{n}{Check} \PYG{n}{every} \PYG{n}{possible} \PYG{n}{combination} \PYG{n}{of} \PYG{n}{key} \PYG{n+nb}{bytes} \PYG{n}{to} \PYG{n}{see} \PYG{k}{if} \PYG{n}{it} \PYG{o+ow}{is} \PYG{n}{the} \PYG{n}{correct} \PYG{n}{key}\PYG{p}{;}
+  \PYG{c+c1}{\PYGZsh{} these checks can be stored to avoid checking the same key many times}
+  \PYG{n}{Return} \PYG{n}{true} \PYG{k}{if} \PYG{n}{the} \PYG{n}{correct} \PYG{n}{key} \PYG{o+ow}{is} \PYG{n}{found} \PYG{o+ow}{and} \PYG{n}{false} \PYG{n}{otherwise}\PYG{p}{;}
+\end{Verbatim}
