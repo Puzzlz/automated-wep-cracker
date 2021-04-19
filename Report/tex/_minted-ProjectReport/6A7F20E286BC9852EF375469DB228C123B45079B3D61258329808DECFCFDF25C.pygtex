@@ -1,0 +1,6 @@
+\begin{Verbatim}[commandchars=\\\{\}]
+sudo apt\PYGZhy{}get update
+sudo apt\PYGZhy{}get install aircrack\PYGZhy{}ng \PYGZhy{}y
+sudo airmon\PYGZhy{}ng check \PYG{n+nb}{kill}
+sudo airmon\PYGZhy{}ng start \PYGZlt{}wireless\PYGZus{}iface\PYGZgt{}
+\end{Verbatim}

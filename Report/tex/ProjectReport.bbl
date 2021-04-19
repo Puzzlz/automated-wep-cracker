@@ -1,0 +1,26 @@
+\begin{thebibliography}{2}
+\providecommand{\natexlab}[1]{#1}
+\providecommand{\url}[1]{\texttt{#1}}
+\expandafter\ifx\csname urlstyle\endcsname\relax
+  \providecommand{\doi}[1]{doi: #1}\else
+  \providecommand{\doi}{doi: \begingroup \urlstyle{rm}\Url}\fi
+
+\bibitem[Menezes et~al.(1997)Menezes, Van~Oorschot, and
+  Vanstone]{appliedCrypto}
+A.~J. (Alfred~J.) Menezes, Paul~C. Van~Oorschot, and Scott~A. Vanstone.
+\newblock \emph{Handbook of applied cryptography}.
+\newblock CRC Press series on discrete mathematics and its applications. CRC
+  Press, Boca Raton, 1997.
+\newblock ISBN 0849385237.
+\newblock Includes bibliographical references (p. 703-754) and index.
+
+\bibitem[Klein(2008)]{klein}
+Andreas Klein.
+\newblock Attacks on the rc4 stream cipher.
+\newblock \emph{Designs, codes, and cryptography}, 48\penalty0 (3):\penalty0
+  269--286, 2008.
+\newblock ISSN 0925-1022.
+\newblock \doi{10.1007/s10623-008-9206-6}.
+\newblock URL \url{https://doi.org/10.1007/s10623-008-9206-6}.
+
+\end{thebibliography}

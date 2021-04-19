@@ -1,0 +1,18 @@
+TY  - JOUR
+JF  - Designs, codes, and cryptography
+DO  - 10.1007/s10623-008-9206-6
+PB  - Springer US
+Y1  - 2008
+JA  - Des. Codes Cryptogr
+VL  - 48
+ID  - cdi_crossref_primary_10_1007_s10623_008_9206_6
+N2  - In this article we present some weaknesses in the RC4 cipher and their cryptographic applications. Especially we improve the attack described by Fluhrer, Mantin, Shamir (In: Selected Areas in Cryptography, 2001) in such a way, that it will work, if the weak keys described in that paper are avoided. A further attack will work even if the first 256 Byte of the output remain unused. Finally we show that variants of the RC4 algorithm like NGG and RC4A are also vulnerable by these techniques. 
+KW  - Information and Communication, Circuits ; Data Structures, Cryptology and Information Theory ; RC4 ; 68P25 ; Discrete Mathematics in Computer Science ; Data Encryption ; Stream cipher ; Cryptanalysis ; Coding and Information Theory ; Mathematics ; 94A60 ; Combinatorics
+EP  - 286
+AU  - Klein, Andreas
+SN  - 0925-1022
+CY  - Boston
+SP  - 269
+IS  - 3
+T1  - Attacks on the RC4 stream cipher
+ER  -

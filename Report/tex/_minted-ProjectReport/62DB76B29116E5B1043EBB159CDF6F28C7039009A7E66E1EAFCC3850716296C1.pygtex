@@ -1,0 +1,23 @@
+\begin{Verbatim}[commandchars=\\\{\}]
+votes = [i: \PYGZob{}\PYGZcb{} for i keybytes];
+\PYGZsh{} parallel for each key byte i
+For x\PYGZus{}i in keystream:
+  K\PYGZus{}ai =  approx(x\PYGZus{}i);
+  votes[i][K\PYGZus{}ai] += 1;
+
+\PYGZsh{} after votes are computed
+key = [[max(votes[i])] for all i];
+
+If any key[i] is a strong byte put all computed values in votes[i] into key[i];
+
+While check(key) is false:
+  Candidate, i = Find min(key[i][0]\PYGZhy{}max(votes[i]) for each i where key[i] is not strong);
+    Key[i] = Candidate;
+Return the correct key;
+
+check(key):
+  Key is a 2d array of possible key bytes;
+  Check every possible combination of key bytes to see if it is the correct key;
+  \PYGZsh{} these checks can be stored to avoid checking the same key many times
+  Return true if the correct key is found and false otherwise;
+\end{Verbatim}
