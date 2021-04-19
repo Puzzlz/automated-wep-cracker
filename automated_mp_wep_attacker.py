@@ -170,36 +170,17 @@ if __name__ == "__main__":
     
     end = time.time()
     time_taken = end-start
-    print(f'Time taken in seconds: {time_taken}')
 
-    # Run AirCrack-ng using captured data; Continuing attack on parent process
-    aircrack = subprocess.Popen(cmd_aircrack)
-    pid_aircrack = aircrack.pid
-    # Wait 17 minutes so that the program doesn't terminate before aircrack is finished
-    try:
-        aircrack.wait(1000)
-    except subprocess.TimeoutExpired:
-        # In case the 17 minutes runs out automatically
-        print('Time ran out, killing aircrack and logging time...')
-        print(f'Time taken in seconds: {time_taken}')
-        os.kill(pid_aircrack, signal.SIGKILL)
-        latest_test = 0
-        for filename in os.scandir('cap_files'):
-            latest_test = int(filename.name.split('.')[0])
-        for filename in os.scandir("."):
-            if filename.name == 'output-01.cap':
-                try:
-                    os.rename('output-01.cap', f'cap_files/{latest_test + 1}.cap')
-                    continue
-                except:
-                    pass
-    # In case aircrack finds the key (different behaviour)
-    for filename in os.scandir('cap_files'):
-            latest_test = int(filename.name.split('.')[0])
+    latest_test = 0
+    for filename in os.scandir('automated_cap_files'):
+        latest_test = int(filename.name.split('.')[0])
+    f = open('time_log.txt', 'a')
+    f.write(f'{latest_test} - {time_taken}')
+    f.close()
     for filename in os.scandir("."):
         if filename.name == 'output-01.cap':
             try:
-                os.rename('output-01.cap', f'cap_files/{latest_test + 1}.cap')
+                os.rename('output-01.cap', f'automated_cap_files/{latest_test + 1}.cap')
                 continue
             except:
                 pass
