@@ -2,37 +2,8 @@
 
 *.pdf
 
-packets/
-
-code/
-
-test_data/
-
 *.mp4
 
-*.pptx
-
-*.7z
-
 *.zip
-
-Paper Candidates.txt
-
-rc4_calculations.txt
-
-voice recordings/
-
-steps.txt
-
-*keystreams.txt
-
-*.docx
-
-*.xlsx
-
-aircrack_process.py
-aireplay_tester.py
-airodump_parser.py
-airodump_process.py
 
 .idea/
