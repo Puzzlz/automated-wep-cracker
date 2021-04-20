@@ -4,45 +4,45 @@ The top-level auxiliary file: ProjectReport.aux
 The style file: unsrtnat.bst
 Database file #1: sources.bib
 Warning--empty year in mainPaper
-You've used 3 entries,
+You've used 4 entries,
             2481 wiz_defined-function locations,
-            583 strings with 5165 characters,
-and the built_in function-call counts, 1113 in all, are:
-= -- 101
-> -- 49
-< -- 1
-+ -- 20
-- -- 14
-* -- 82
-:= -- 189
-add.period$ -- 16
-call.type$ -- 3
-change.case$ -- 5
-chr.to.int$ -- 3
-cite$ -- 4
-duplicate$ -- 52
-empty$ -- 99
-format.name$ -- 17
-if$ -- 232
+            589 strings with 5244 characters,
+and the built_in function-call counts, 1372 in all, are:
+= -- 123
+> -- 56
+< -- 2
++ -- 24
+- -- 16
+* -- 95
+:= -- 228
+add.period$ -- 19
+call.type$ -- 4
+change.case$ -- 7
+chr.to.int$ -- 4
+cite$ -- 5
+duplicate$ -- 66
+empty$ -- 129
+format.name$ -- 20
+if$ -- 289
 int.to.chr$ -- 1
-int.to.str$ -- 4
+int.to.str$ -- 5
 missing$ -- 3
-newline$ -- 29
-num.names$ -- 9
-pop$ -- 22
+newline$ -- 34
+num.names$ -- 12
+pop$ -- 34
 preamble$ -- 1
-purify$ -- 3
+purify$ -- 4
 quote$ -- 0
-skip$ -- 33
+skip$ -- 44
 stack$ -- 0
-substring$ -- 31
-swap$ -- 6
+substring$ -- 33
+swap$ -- 9
 text.length$ -- 0
 text.prefix$ -- 0
 top$ -- 0
-type$ -- 18
+type$ -- 25
 warning$ -- 1
-while$ -- 8
+while$ -- 10
 width$ -- 0
-write$ -- 57
+write$ -- 69
 (There was 1 warning)

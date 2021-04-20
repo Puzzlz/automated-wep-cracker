@@ -299,12 +299,7 @@ This means that deploying this attack on a Raspberry Pi would be possible, there
 
 
 \section{Conclusion}
-- Any linux hardware would work, enabling it to be super incognito\\
-- Incredibly fast to crack it once enough IVs obtained (less than 1 second in most cases)\\
-- Underlying encryption is broken, which is why the attack works so well\\
-- Add citations using \cite{klein}\\
-
-- Even though WEP is completely broken, this does not mean that WPA/WPA2 are void of faults. There are compromising attacks, like the KRACK attack (https://www.krackattacks.com/), which are able to decrypt WPA2 and WPA traffic. KRACK does this by exploiting a vulnerability in the 4-way handshake and forcing a nonce re-use by replaying the third message of the 4-way handshake. This goes to show how difficult it is to guarantee 100\% protection for Wi-Fi networks.
+We were able to successfully perform the attack described in the research paper that we based our project on using aircrack. The attack is very efficient and can be done from any linux hardware. The time consuming task of the attack is to collect a sufficient amount of IVs, after which the algorithm to find the key completes in less than 1 second most of the time. The reason the attack works so well is because of the flaws in the underlying RC4 encryption, which were pointed out in the papers discussed. The success rate of the attack is affected by the number of IVs that are retrieved, because the probability of determining the correct key depends on the sample size of IVs being large. Even though WEP is completely broken, this does not mean that WPA/WPA2 are void of faults. There are compromising attacks, like the KRACK attack \cite{krack}, which are able to decrypt WPA2 and WPA traffic. KRACK does this by exploiting a vulnerability in the 4-way handshake and forcing a nonce re-use by replaying the third message of the 4-way handshake. This goes to show how difficult it is to guarantee 100\% protection for Wi-Fi networks. Through this project we learned how exploits in encryption algorithms can be used in breaking into wireless security protocols that use them, and we learned how to use sophisticated tools like the aircrack library to carry out these attacks on a real-world wireless network, using a basic linux machine in our experiments. 
 
 
 % ---------------------------------------- Bibliography Section ---------------------------------------- %

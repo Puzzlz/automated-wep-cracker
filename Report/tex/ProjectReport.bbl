@@ -1,4 +1,4 @@
-\begin{thebibliography}{3}
+\begin{thebibliography}{4}
 \providecommand{\natexlab}[1]{#1}
 \providecommand{\url}[1]{\texttt{#1}}
 \expandafter\ifx\csname urlstyle\endcsname\relax
@@ -28,5 +28,10 @@ A.~J. (Alfred~J.) Menezes, Paul~C. Van~Oorschot, and Scott~A. Vanstone.
   Press, Boca Raton, 1997.
 \newblock ISBN 0849385237.
 \newblock Includes bibliographical references (p. 703-754) and index.
+
+\bibitem[Attacks(2021)]{krack}
+Key~Reinstallation Attacks.
+\newblock Krack attacks, Apr 2021.
+\newblock URL \url{https://www.krackattacks.com}.
 
 \end{thebibliography}
