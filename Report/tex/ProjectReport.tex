@@ -83,7 +83,7 @@
 	Neilesh Chander - 101040037
 	\vfill
 	% Page footer
-	\large Carleton University \par
+	\large COMP 4203 \par
 	\large \today\par
 \end{titlepage}
 \newpage
@@ -152,12 +152,12 @@ Using a known plaintext attack by monitoring packets before they are sent, we kn
 This paper is the main paper that this project is based on. It proves a relationship between keystreams and the key in the RC4 algorithm. This relationship is the basis of the exploit that the attack in our project uses. 
 
 \subsection{Breaking 104 Bit WEP in Less Than 60 Seconds \cite{mainPaper}}
-This paper presents a full attack to retrieve the WEP key. It describes the method to capture a sufficient amount of keystreams and use them to get the key with an algorithm based on the exploit shown in Kleins paper. It uses an approximation of the formula that Klein presents to efficiently compute the key bytes in parallel as opposed to iteratively as Kleins formula does. Then it proves through simulations with the Aircrack library that the attack can be done with relatively low cost equipment very quickly. 
+This paper presents a full attack to retrieve the WEP key. It describes the method to capture a sufficient amount of keystreams and use them to get the key with an algorithm based on the exploit shown in Klein's paper. It uses an approximation of the formula that Klein presents to efficiently compute the key bytes in parallel as opposed to iteratively as Klein's formula does. Then it proves through simulations with the Aircrack library that the attack can be done with relatively low cost equipment very quickly. 
 
 \section{Frameworks and Technologies}
 In order to get the project to where it is, we had to use a multitude of existing libraries as well as existing tools. The entire project was written using the Python programming language, and a little bit of shell script to help automate the data collection process. In the Python code we used many libraries, the major ones being the scapy library to help construct the deauthentication packets, as well as send them. We also used the subprocess library to start, manage and stop the aircrack processes from within Python. The last major library used was the multiprocessing library. This library allowed us to run different aircrack modules simultaneously from the same Python program while individually managing them. \\
 
-We also used the existing command line suite aircrack-ng. This suite packages a lot of useful tools, of which we used: airodump-ng to capture the packets being sent on the network, aireplay-ng to control the deauthentication packets we were sending as well as duplicating and injecting the ARP requests, aircrack-ng to apply Klein’s key ranking attack on the captured packets/IVs. During initial testing, WIreshark was used to capture packets on the network, as well as to analyze ARP packets to better learn their structure with the goal of being able to identify them when encrypted with WEP. In combination with this, a hex editor was used to attempt to manually modify packets to format them as required for re-injection (changing MAC address, sequence number, and recalculating the checksum).
+We also used the existing command line suite aircrack-ng. This suite packages a lot of useful tools, of which we used: airodump-ng to capture the packets being sent on the network, aireplay-ng to control the deauthentication packets we were sending as well as duplicating and injecting the ARP requests, aircrack-ng to apply Klein's key ranking attack on the captured packets/IVs. During initial testing, Wireshark was used to capture packets on the network, as well as to analyze ARP packets to better learn their structure with the goal of being able to identify them when encrypted with WEP. In combination with this, a hex editor was used to attempt to manually modify packets to format them as required for re-injection (changing MAC address, sequence number, and recalculating the checksum).
 
 \section{Methodology}
 Before any code writing or program testing could be done, there needed to be a network to work off of. In order to accomplish this, an older D-Link router was used. It was connected to an existing local area network to allow internet access through. Navigating to the D-Link router portal at 192.168.0.1 allowed for the configuration of the network settings. Once there we were able to select WEP as the encryption method, choose the authentication type (basic/open) as well as the length of the key and the key itself (hackr). These settings can all be seen in the figure below.\\
@@ -188,7 +188,7 @@ The process for applying the attack is fairly straightforward. The attacker (lap
 Once enough partial keystreams have been captured (1 keystream = 1 IV), a key ranking algorithm can be used to find the correct key (given enough of them). 
 
 \subsection{Key Ranking Algorithm (PTW)}
-Tews et al. then describes an algorithm for determining the correct key based on the input of the collected keystreams \cite{mainPaper}. Each byte in the key is approximately computed using every recovered byte from the keystream and a modified version of the formula presented in Kleins paper. Each time the key byte is approximated using a key stream, the value that is computed is voted for as the correct key byte. The votes are tracked for every key byte and the value with the highest vote at the end is assumed to be the correct key byte. Using the modified approximate calculation, the key bytes can be computed this way in parallel instead of iteratively as in Klein's solution.\\
+Tews et al. then describes an algorithm for determining the correct key based on the input of the collected keystreams \cite{mainPaper}. Each byte in the key is approximately computed using every recovered byte from the keystream and a modified version of the formula presented in Klein's paper. Each time the key byte is approximated using a key stream, the value that is computed is voted for as the correct key byte. The votes are tracked for every key byte and the value with the highest vote at the end is assumed to be the correct key byte. Using the modified approximate calculation, the key bytes can be computed this way in parallel instead of iteratively as in Klein's solution.\\
 
 If the sample size is small, the correct key byte may not be the one with the highest number of votes. Initially, the algorithm selects each key byte that has the highest number of votes and determines if that key is correct. If it is not, the algorithm selects the next closest key byte by votes out of all the key bytes and adds that single key byte into the key bytes that have been selected. Everytime the algorithm selects a new key byte this way, it checks all the new possible combinations of key bytes out of the ones that have already been selected. The algorithm repeats this process until the correct key is found. \\
 
@@ -280,7 +280,7 @@ A major focus in \cite{mainPaper} is the time it takes for this attack to work, 
     \caption{Time elapsed to obtain desired number of IVs}
 \end{figure}
 
-The entire process of sending the packets, sniffing the packets, handling the file IO operations, was handled by a very old laptop with 4GB of RAM, and an AMD E-350 laptop CPU with 2 core and 2 threads. This caused the CPU usage to be at 100\% at all times (Figure 3 and Figure 4), but the RAM barely being used (Figure 4). This leads us to believe that faster times could have been reached on better hardware, but we did not have the hardware available to test it on. \\
+The entire process of sending the packets, sniffing the packets, handling the file IO operations, was handled by a very old laptop with 4GB of RAM, and an AMD E-350 laptop CPU with 2 core and 2 threads. This caused the CPU usage to be at 100\% at all times (Figure 6 and Figure 7), but the RAM barely being used (Figure 6). This leads us to believe that faster times could have been reached on better hardware, but we did not have the hardware available to test it on. \\
 
 \begin{figure}[H]
  	\centering
