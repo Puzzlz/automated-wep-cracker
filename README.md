@@ -43,3 +43,5 @@ The following command will run the program without aircrack, but save the output
 
 ## Authors
 Tyson Steele
+Neilesh Chander
+Ryan Kane
