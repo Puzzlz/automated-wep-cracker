@@ -1,4 +1,4 @@
-# COMP4203 - Project
+# Automated WEP cracker
 This code utilizes the aircrack suite to sniff packets, inject packets, actively attack a WEP network, and crack the password for that network.
 
 ## Requirements
@@ -40,3 +40,6 @@ The following command will run the program without aircrack, but save the output
 
 ### Gathering data
 `sudo airodump-ng <iface>`
+
+## Authors
+Tyson Steele
